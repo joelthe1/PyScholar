@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 import sys
 import json
@@ -25,6 +25,7 @@ class ScholarSettings(object):
         self.citform = 0  # Citation format, default none
         self.per_page_results = ScholarConf.MAX_PAGE_RESULTS
         self._is_configured = False
+        self.starting_number = 0
 
     def set_citation_format(self, citform):
         citform = ScholarUtils.ensure_int(citform)
@@ -122,7 +123,7 @@ def encode(s):
         return str(s)
 
 
-def csv(querier, header=False, sep='|'):
+def csv(querier, header=False, sep='||'):
     articles = querier.articles
     for art in articles:
         result = art.as_csv(header=header, sep=sep)

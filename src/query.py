@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 """
 This module provides classes for querying Google Scholar and parsing
 returned results. It currently *only* processes the first results
@@ -351,7 +351,8 @@ class ScholarQuerier(object):
 
         self.firefox.get(self.GET_SETTINGS_URL)
 
-        tag = self.firefox.find_element_by_id('gs_settings_form')
+        tag = self.firefox.find_element_by_name('scisig')
+        print tag.get_attribute('value')
         #tag = soup.find(name='form', attrs={'id': 'gs_settings_form'})
         if tag is None:
             ScholarUtils.log('info', 'parsing settings failed: no form')
@@ -364,7 +365,7 @@ class ScholarQuerier(object):
         #     return False
 
         urlargs = {'start': settings.starting_number,
-                   'scisig': tag['value'],
+                   'scisig': tag.get_attribute('value'),#tag['value'],
                    'num': settings.per_page_results,
                    'scis': 'no',
                    'scisf': ''}
@@ -405,6 +406,8 @@ class ScholarQuerier(object):
             return True
 
         ScholarUtils.log('info', 'retrieving citation export data')
+        article['url_citation'] = article['url_citation'][26:]
+        print 'and now printing url=', article['url_citation']
         data = self._get_http_response(url=article['url_citation'],
                                        log_msg='citation data response',
                                        err_msg='requesting citation data failed')
@@ -463,7 +466,7 @@ class ScholarQuerier(object):
             return None
 
     def quit(self):
-        if path.exists(FF_PROFILE_PATH):
-            rmtree(FF_PROFILE_PATH)
-        copytree(self.firefox.profile.path, FF_PROFILE_PATH)
+        #if path.exists(FF_PROFILE_PATH):
+         #   rmtree(FF_PROFILE_PATH)
+        #copytree(self.firefox.profile.path, FF_PROFILE_PATH)
         self.firefox.quit()
