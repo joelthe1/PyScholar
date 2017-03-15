@@ -20,7 +20,7 @@ with open(path) as rfile:
     data = json.load(rfile)
     ctr=0
     wfile = open('scraped_results.csv', 'a')
-    for pub in data[177:]:
+    for pub in data[238:]: # till 237 and started from 500
         try:
             ctr += 1
             print pub['id']
