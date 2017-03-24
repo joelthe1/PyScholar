@@ -7,6 +7,7 @@ import errno
 import json
 import subprocess
 import re
+import random
 
 def ensure_path(path):
     try:
@@ -19,21 +20,23 @@ path = sys.argv[1]
 with open(path) as rfile:
     data = json.load(rfile)
     ctr=0
-    wfile = open('scraped_results.csv', 'a')
-    for pub in data[238:]: # till 237 and started from 500
+    wfile = open('../data/run2/scraped_results_1.csv', 'a')
+    for pub in data:
         try:
             ctr += 1
             print pub['id']
+            wfile.write(str(pub['id'])+'||')
             res = subprocess.check_output("python pyscholar.py -t -p \"{0}\" --csv".format(pub['title']), shell=True);
 
             #wfile.write(str(pub['id']) + '||')
-            res = res[:-1]
+            res = res[1:-1]
             res = res.replace('\n', '\n'+str(pub['id'])+'||')
             wfile.write(res)
-            if len(res) > 5:
-                wfile.write(res[1:] + '\n')
-            if ctr %20:
-                time.sleep(30)
+            wfile.write('\n')
+#            time.sleep(random.randrange(1,4))
+#            if ctr %20:
+#                time.sleep(rand)
         except Exception:
+            wfile.write('~~~||' + pub['title'].encode('utf8') + '\n')
             print 'An error occured. ', sys.exc_info()
 
